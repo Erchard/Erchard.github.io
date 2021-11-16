@@ -40,7 +40,8 @@
         if (!id) {
             const id = Math.floor(Math.random() * 99999999)
         }
-        contractWithSigner.send(id, text)
+        tx = await contractWithSigner.send(id, text)
+        return tx.wait()
     }
 
     async function readText(id) {
