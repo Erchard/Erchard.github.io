@@ -31,7 +31,7 @@
 
     function sendText(text){
         const id = Math.floor(Math.random()*99999999)
-        contract.send(id,text).then(
+        contractWithSigner.send(id,text).then(
             success => {
                 console.log(success)
             },
@@ -41,7 +41,7 @@
     }
 
     function readText(id){
-        contract.read(id).then(
+        contractWithSigner.read(id).then(
             success => {
                 console.log(success)
             },
