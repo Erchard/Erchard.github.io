@@ -17,7 +17,7 @@
 
     wallet.getBalance().then(
         success => {
-            console.log(success.toString())
+            console.log(ethers.utils.formatUnits(success))
         },
         error => {
             console.error(error)
