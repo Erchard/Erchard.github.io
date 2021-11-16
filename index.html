@@ -23,10 +23,34 @@
             console.error(error)
         })
 
-    var contract = new ethers.Contract('0xC4B20d2555be52eDf5F32806d7328479edECB584',
+    contract = new ethers.Contract('0xC4B20d2555be52eDf5F32806d7328479edECB584',
         '[{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"}],"name":"read","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"}],"name":"send","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
         provider);
-    var contractWithSigner = contract.connect(wallet);
+    contractWithSigner = contract.connect(wallet);
+
+
+    function sendText(text){
+        const id = Math.floor(Math.random()*99999999)
+        contract.send(id,text).then(
+            success => {
+                console.log(success)
+            },
+            error => {
+                console.error(error)
+            })
+    }
+
+    function readText(id){
+        contract.read(id).then(
+            success => {
+                console.log(success)
+            },
+            error => {
+                console.error(error)
+            })
+    }
+
+    sendText('Test 1')
 
 </script>
 
