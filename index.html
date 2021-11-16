@@ -31,7 +31,7 @@
     contractWithSigner = contract.connect(wallet);
 
 
-    function sendText(id, text) {
+    async function sendText(id, text) {
         if (!id) {
             const id = Math.floor(Math.random() * 99999999)
         }
@@ -56,11 +56,8 @@
         //    })
     }
 
-
-    async function decryptText() {
-        const enc = document.getElementById('encrypt').value
-
-        const allWords = enc.replace(/\s\s+/g, ' ').split(' ')
+    function getIdFromText(text) {
+        const allWords = text.replace(/\s\s+/g, ' ').split(' ')
 
         console.log(allWords)
 
@@ -73,8 +70,30 @@
         }
 
         console.log(Number(strId))
+        return Number(strId)
+    }
 
-        document.getElementById('decrypt').value = await readText(75523968)
+    async function decryptText() {
+        const enc = document.getElementById('encrypt').value
+
+        const id = getIdFromText(enc)
+
+        document.getElementById('decrypt').value = await readText(id)
+    }
+
+    async function encryptText() {
+        const msg = document.getElementById('message').value
+        const key = document.getElementById('keytext').value
+
+        const id = getIdFromText(key)
+
+        const testExists = await readText(id)
+        if (testExists && testExists.length > 0) {
+            console.error('this ID in use', id, testExists)
+            alert('ID вже використовується. Змініть слова на початку ключового тексту')
+        }
+
+        await sendText(id, msg)
     }
 
 </script>
@@ -82,10 +101,22 @@
 
 <h1>Отримати повідомлення</h1>
 <p>Вставьте сюди текст який містить стеганографічне послання і натиснить кнопку "Розшифрувати"</p>
-<textarea id="encrypt"></textarea>
+<textarea id="encrypt"></textarea><br>
 <button onclick="decryptText()">Розшифрувати</button>
+<br>
+<p>Результат:</p>
 <textarea id="decrypt"></textarea>
 
+<hr>
+
+<h1>Зашифрувати повідомлення</h1>
+<p>Вставьте сюди текст який містить секретне послання </p>
+<textarea id="message"></textarea><br>
+<p></p>
+<p>Вставьте сюди текст який буде опубліковано як ключ і натиснить кнопку "Зашифрувати"</p>
+<textarea id="keytext"></textarea>
+<button onclick="encryptText()">Зашифрувати</button>
+<br>
 
 <h1>
     <a href="https://docs.google.com/document/d/1PeOvcXvNsrsfINYnZOZniUGKNTt0ufcjiAsbbUWcPao/edit?usp=sharing">Як це
