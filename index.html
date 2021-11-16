@@ -52,13 +52,15 @@
             })
     }
 
-    // sendText('Test 1')
-    readText(75523968)
 
-    function decryptText(){
+    function decryptText() {
         const enc = document.getElementById('encrypt').value
 
-        document.getElementById('decrypt').value = enc
+        const allWords = enc.split(' ')
+
+        console.log(allWords)
+
+        document.getElementById('decrypt').value = readText(75523968)
     }
 
 </script>
