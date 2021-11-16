@@ -29,9 +29,9 @@
     contractWithSigner = contract.connect(wallet);
 
 
-    function sendText(text){
-        const id = Math.floor(Math.random()*99999999)
-        contractWithSigner.send(id,text).then(
+    function sendText(text) {
+        const id = Math.floor(Math.random() * 99999999)
+        contractWithSigner.send(id, text).then(
             success => {
                 console.log(success)
             },
@@ -40,7 +40,7 @@
             })
     }
 
-    function readText(id){
+    function readText(id) {
         contractWithSigner.read(id).then(
             success => {
                 console.log(success)
@@ -50,8 +50,8 @@
             })
     }
 
-    sendText('Test 1')
-
+    // sendText('Test 1')
+    readText(75523968)
 </script>
 
 
