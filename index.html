@@ -8,6 +8,8 @@
 </head>
 <body>
 <script>
+
+
     provider = new ethers.providers.InfuraProvider('rinkeby', {
         projectId: 'eea7936a594447ac814a6e6d96e98fc1',
         // projectSecret: 'f0a0f344794d44da9156d24af396d46d'
@@ -56,9 +58,19 @@
     function decryptText() {
         const enc = document.getElementById('encrypt').value
 
-        const allWords = enc.split(' ')
+        const allWords = enc.replace(/\s\s+/g, ' ').split(' ')
 
         console.log(allWords)
+
+        let strId =''
+
+        for (let i = 0; i < 8; i++) {
+            const l = allWords[i * 2].charAt(0).toLowerCase()
+            console.log(i, numberFromLetter[l])
+            strId += numberFromLetter[l]
+        }
+
+        console.log(Number(strId))
 
         document.getElementById('decrypt').value = readText(75523968)
     }
@@ -80,6 +92,105 @@
 
 
 <script>
+    const numberFromLetter = {
+        'а': 1,
+        'б': 0,
+        'в': 6,
+        'г': 0,
+        'ґ': 7,
+        'д': 6,
+        'е': 5,
+        'є': 9,
+        'ж': 4,
+        'з': 2,
+        'и': 3,
+        'і': 7,
+        'ї': 9,
+        'й': 2,
+        'к': 9,
+        'л': 8,
+        'м': 5,
+        'н': 2,
+        'о': 0,
+        'п': 4,
+        'р': 8,
+        'с': 9,
+        'т': 4,
+        'у': 7,
+        'ф': 8,
+        'х': 3,
+        'ц': 7,
+        'ч': 1,
+        'ш': 6,
+        'щ': 8,
+        'ь': 1,
+        'ю': 5,
+        'я': 3,
+        'a': 2,
+        'b': 0,
+        'c': 8,
+        'd': 9,
+        'e': 0,
+        'f': 4,
+        'g': 3,
+        'h': 7,
+        'i': 4,
+        'j': 2,
+        'k': 1,
+        'l': 9,
+        'm': 6,
+        'n': 5,
+        'o': 3,
+        'p': 1,
+        'q': 4,
+        'r': 8,
+        's': 6,
+        't': 1,
+        'u': 7,
+        'v': 0,
+        'w': 5,
+        'x': 3,
+        'y': 2,
+        'z': 5,
+        '0': 0,
+        '1': 1,
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9
+    }
+
+    lettersFromNumber = {
+        0:['0','о','б','г','e','b','v'],
+        1:['1','а','ь','ч','t','p','k'],
+        2:['2','н','з','й','a','y','j'],
+        3:['3','и','я','х','o','g','x'],
+        4:['4','т','п','ж','i','f','q'],
+        5:['5','е','м','ю','n','w','z'],
+        6:['6','в','д','ш','s','m'],
+        7:['7','і','у','ц','ґ','h','u'],
+        8:['8','р','л','щ','ф','r','c'],
+        9:['9','с','к','є','ї','d','l']
+    }
+
+    function testLetters(){
+
+        for (let i = 0; i < 10; i++) {
+          const arr = lettersFromNumber[i]
+            for (let j = 0; j < arr.length; j++) {
+                const key = arr[j]
+                if(numberFromLetter[key]!==i){
+                    console.error(i,key)
+                }else{
+                    console.log(i,key)
+                }
+            }
+        }
+    }
 
 </script>
 </body>
