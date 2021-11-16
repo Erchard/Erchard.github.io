@@ -74,8 +74,8 @@
     }
 
     async function encryptText() {
-        const msg = document.getElementById('message').value
-        const key = document.getElementById('keytext').value
+        const msg = document.getElementById('message').value.trim()
+        const key = document.getElementById('keytext').value.trim()
 
         const id = getIdFromText(key)
 
@@ -85,9 +85,19 @@
             alert('ID вже використовується. Змініть слова на початку ключового тексту')
         }
 
+        const encbtn = document.getElementById('encbtn')
+        encbtn.disabled = true
+
+        const cnsl = document.getElementById('cnsl')
+        cnsl.innerText = '...ваш текст знаходиться в обробці. Почекайте хвилиночку...'
+
         const result = await sendText(id, msg)
+
         console.log(result)
-        window.location = 'https://rinkeby.etherscan.io/tx/result'
+        cnsl.innerHTML = 'Ваш текст зашифровано.<br>' +
+            'Транзакцію можна подивитись <a href="https://rinkeby.etherscan.io/tx/' + result + '">тут"</a><br>' +
+            'Для доступу до повідомлення опублікуйте свій стеганографічний текст:<br>' + key + '<br>'
+        encbtn.disabled = false
     }
 
 </script>
@@ -109,8 +119,9 @@
     <p></p>
     <p>Вставьте сюди текст який буде опубліковано як ключ і натиснить кнопку "Зашифрувати"</p>
     <textarea id="keytext"></textarea><br>
-    <button onclick="encryptText()">Зашифрувати</button>
+    <button id="encbtn" onclick="encryptText()">Зашифрувати</button>
     <br>
+    <p id="cnsl"></p>
 </div>
 
 <div class="container">
