@@ -54,20 +54,31 @@
 
     // sendText('Test 1')
     readText(75523968)
+
+    function decryptText(){
+        const enc = document.getElementById('encrypt').value
+
+        document.getElementById('decrypt').value = enc
+    }
+
 </script>
 
 
+<h1>Отримати повідомлення</h1>
+<p>Вставьте сюди текст який містить стеганографічне послання і натиснить кнопку "Розшифрувати"</p>
+<textarea id="encrypt"></textarea>
+<button onclick="decryptText()">Розшифрувати</button>
+<textarea id="decrypt"></textarea>
+
+
 <h1>
-    <h1>Отримати повідомлення</h1>
-    <p>Вставьте сюди текст який містить стеганографічне послання і натиснить кнопку "Розшифрувати"</p>
-    <textarea id="encrypt"></textarea>
-    <button>Розшифрувати</button>
-    <textarea id="decrypt"></textarea>
-
-
-
     <a href="https://docs.google.com/document/d/1PeOvcXvNsrsfINYnZOZniUGKNTt0ufcjiAsbbUWcPao/edit?usp=sharing">Як це
         працює</a>
 </h1>
+
+
+<script>
+
+</script>
 </body>
 </html>
