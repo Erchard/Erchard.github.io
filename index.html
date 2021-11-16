@@ -41,7 +41,7 @@
             const id = Math.floor(Math.random() * 99999999)
         }
         tx = await contractWithSigner.send(id, text)
-        return tx.wait().transactionHash
+        return tx.wait()
     }
 
     async function readText(id) {
@@ -92,10 +92,10 @@
         cnsl.innerText = '...ваш текст знаходиться в обробці. Почекайте хвилиночку...'
 
         const result = await sendText(id, msg)
-
-        console.log(result)
+        const txHash = result.transactionHash
+        console.log(txHash)
         cnsl.innerHTML = 'Ваш текст зашифровано.<br>' +
-            'Транзакцію можна подивитись <a href="https://rinkeby.etherscan.io/tx/' + result + '">тут"</a><br>' +
+            'Транзакцію можна подивитись <a href="https://rinkeby.etherscan.io/tx/' + txHash + '">тут</a><br>' +
             'Для доступу до повідомлення опублікуйте свій стеганографічний текст:<br>' + key + '<br>'
         encbtn.disabled = false
     }
