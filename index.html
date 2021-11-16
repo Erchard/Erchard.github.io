@@ -41,7 +41,7 @@
             const id = Math.floor(Math.random() * 99999999)
         }
         tx = await contractWithSigner.send(id, text)
-        return tx.wait()
+        return tx.wait().transactionHash
     }
 
     async function readText(id) {
@@ -87,7 +87,7 @@
 
         const result = await sendText(id, msg)
         console.log(result)
-
+        window.location = 'https://rinkeby.etherscan.io/tx/result'
     }
 
 </script>
