@@ -45,14 +45,6 @@
 
     async function readText(id) {
         return contractWithSigner.read(id)
-        // .then(
-        //    success => {
-        //        console.log(success)
-        //        return success
-        //    },
-        //    error => {
-        //        console.error(error)
-        //    })
     }
 
     function getIdFromText(text) {
@@ -99,31 +91,33 @@
 
 </script>
 
-
-<h1>Отримати повідомлення</h1>
-<p>Вставьте сюди текст який містить стеганографічне послання і натиснить кнопку "Розшифрувати"</p>
-<textarea id="encrypt"></textarea><br>
-<button onclick="decryptText()">Розшифрувати</button>
-<br>
-<p>Результат:</p>
-<textarea id="decrypt"></textarea>
-
+<div class="container">
+    <h1>Отримати повідомлення</h1>
+    <p>Вставьте сюди текст який містить стеганографічне послання і натиснить кнопку "Розшифрувати"</p>
+    <textarea id="encrypt"></textarea><br>
+    <button onclick="decryptText()">Розшифрувати</button>
+    <br>
+    <p>Результат:</p>
+    <textarea id="decrypt"></textarea>
+</div>
 <hr>
+<div class="container">
+    <h1>Зашифрувати повідомлення</h1>
+    <p>Вставьте сюди текст який містить секретне послання </p>
+    <textarea id="message"></textarea><br>
+    <p></p>
+    <p>Вставьте сюди текст який буде опубліковано як ключ і натиснить кнопку "Зашифрувати"</p>
+    <textarea id="keytext"></textarea><br>
+    <button onclick="encryptText()">Зашифрувати</button>
+    <br>
+</div>
 
-<h1>Зашифрувати повідомлення</h1>
-<p>Вставьте сюди текст який містить секретне послання </p>
-<textarea id="message"></textarea><br>
-<p></p>
-<p>Вставьте сюди текст який буде опубліковано як ключ і натиснить кнопку "Зашифрувати"</p>
-<textarea id="keytext"></textarea><br>
-<button onclick="encryptText()">Зашифрувати</button>
-<br>
-
-<h1>
-    <a href="https://docs.google.com/document/d/1PeOvcXvNsrsfINYnZOZniUGKNTt0ufcjiAsbbUWcPao/edit?usp=sharing">Як це
-        працює</a>
-</h1>
-
+<div class="container">
+    <h1>
+        <a href="https://docs.google.com/document/d/1PeOvcXvNsrsfINYnZOZniUGKNTt0ufcjiAsbbUWcPao/edit?usp=sharing">Як це
+            працює</a>
+    </h1>
+</div>
 
 <script>
     const numberFromLetter = {
