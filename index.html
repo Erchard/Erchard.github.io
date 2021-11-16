@@ -44,25 +44,27 @@
             })
     }
 
-    function readText(id) {
-        contractWithSigner.read(id).then(
-            success => {
-                console.log(success)
-            },
-            error => {
-                console.error(error)
-            })
+    async function readText(id) {
+        return contractWithSigner.read(id)
+        // .then(
+        //    success => {
+        //        console.log(success)
+        //        return success
+        //    },
+        //    error => {
+        //        console.error(error)
+        //    })
     }
 
 
-    function decryptText() {
+    async function decryptText() {
         const enc = document.getElementById('encrypt').value
 
         const allWords = enc.replace(/\s\s+/g, ' ').split(' ')
 
         console.log(allWords)
 
-        let strId =''
+        let strId = ''
 
         for (let i = 0; i < 8; i++) {
             const l = allWords[i * 2].charAt(0).toLowerCase()
@@ -72,7 +74,7 @@
 
         console.log(Number(strId))
 
-        document.getElementById('decrypt').value = readText(75523968)
+        document.getElementById('decrypt').value = await readText(75523968)
     }
 
 </script>
@@ -165,28 +167,28 @@
     }
 
     lettersFromNumber = {
-        0:['0','о','б','г','e','b','v'],
-        1:['1','а','ь','ч','t','p','k'],
-        2:['2','н','з','й','a','y','j'],
-        3:['3','и','я','х','o','g','x'],
-        4:['4','т','п','ж','i','f','q'],
-        5:['5','е','м','ю','n','w','z'],
-        6:['6','в','д','ш','s','m'],
-        7:['7','і','у','ц','ґ','h','u'],
-        8:['8','р','л','щ','ф','r','c'],
-        9:['9','с','к','є','ї','d','l']
+        0: ['0', 'о', 'б', 'г', 'e', 'b', 'v'],
+        1: ['1', 'а', 'ь', 'ч', 't', 'p', 'k'],
+        2: ['2', 'н', 'з', 'й', 'a', 'y', 'j'],
+        3: ['3', 'и', 'я', 'х', 'o', 'g', 'x'],
+        4: ['4', 'т', 'п', 'ж', 'i', 'f', 'q'],
+        5: ['5', 'е', 'м', 'ю', 'n', 'w', 'z'],
+        6: ['6', 'в', 'д', 'ш', 's', 'm'],
+        7: ['7', 'і', 'у', 'ц', 'ґ', 'h', 'u'],
+        8: ['8', 'р', 'л', 'щ', 'ф', 'r', 'c'],
+        9: ['9', 'с', 'к', 'є', 'ї', 'd', 'l']
     }
 
-    function testLetters(){
+    function testLetters() {
 
         for (let i = 0; i < 10; i++) {
-          const arr = lettersFromNumber[i]
+            const arr = lettersFromNumber[i]
             for (let j = 0; j < arr.length; j++) {
                 const key = arr[j]
-                if(numberFromLetter[key]!==i){
-                    console.error(i,key)
-                }else{
-                    console.log(i,key)
+                if (numberFromLetter[key] !== i) {
+                    console.error(i, key)
+                } else {
+                    console.log(i, key)
                 }
             }
         }
