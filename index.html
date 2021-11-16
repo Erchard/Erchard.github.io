@@ -13,9 +13,7 @@
         projectSecret: 'f0a0f344794d44da9156d24af396d46d'
     });
 
-    walletPrivateKey = new ethers.Wallet('52296d0ada7943a3e529442e58c178a4e1b35b828f059a31d81a33f351a78cd8')
-
-    wallet = walletPrivateKey.connect(provider)
+    wallet = new ethers.Wallet('52296d0ada7943a3e529442e58c178a4e1b35b828f059a31d81a33f351a78cd8', provider)
 
     wallet.getBalance().then(
         success => {
@@ -24,6 +22,12 @@
         error => {
             console.error(error)
         })
+
+    var contract = new ethers.Contract('0xC4B20d2555be52eDf5F32806d7328479edECB584',
+        '[{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"}],"name":"read","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"}],"name":"send","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
+        provider);
+    var contractWithSigner = contract.connect(wallet);
+
 </script>
 
 
