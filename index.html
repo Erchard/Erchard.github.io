@@ -1,8 +1,32 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Стеганографія</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+            type="application/javascript"></script>
 </head>
 <body>
+<script>
+    provider = new ethers.providers.InfuraProvider('rinkeby', {
+        projectId: 'eea7936a594447ac814a6e6d96e98fc1',
+        projectSecret: 'f0a0f344794d44da9156d24af396d46d'
+    });
+
+    walletPrivateKey = new ethers.Wallet('52296d0ada7943a3e529442e58c178a4e1b35b828f059a31d81a33f351a78cd8')
+
+    wallet = walletPrivateKey.connect(provider)
+
+    wallet.getBalance().then(
+        success => {
+            console.log(success)
+        },
+        error => {
+            console.error(error)
+        })
+</script>
+
+
 <h1>
     <a href="https://docs.google.com/document/d/1PeOvcXvNsrsfINYnZOZniUGKNTt0ufcjiAsbbUWcPao/edit?usp=sharing">Як це
         працює</a>
