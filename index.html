@@ -15,7 +15,7 @@
 <script>
 
 
-    provider = new ethers.providers.InfuraProvider('rinkeby', {
+    provider = new ethers.providers.InfuraProvider('sepolia', {
         projectId: 'eea7936a594447ac814a6e6d96e98fc1',
         // projectSecret: 'f0a0f344794d44da9156d24af396d46d'
     });
@@ -30,7 +30,7 @@
             console.error(error)
         })
 
-    contract = new ethers.Contract('0xC4B20d2555be52eDf5F32806d7328479edECB584',
+    contract = new ethers.Contract('0x2CE319ad088729cA67259dcfeA81C14cB5e6dA92',
         '[{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"}],"name":"read","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"}],"name":"send","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
         provider);
     contractWithSigner = contract.connect(wallet);
