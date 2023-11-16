@@ -2,50 +2,238 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERC-20 Token Management</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js"></script>
+    <title>Стеганографія</title>
+<script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js" type="text/javascript">
+</script>
+</script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center my-4">ERC-20 Token Management</h1>
-        <div id="tokenManagement">
-            <form id="createTokenForm">
-                <h2>Create New Token</h2>
-                <div class="form-group">
-                    <label for="tokenName">Token Name</label>
-                    <input type="text" class="form-control" id="tokenName" placeholder="Enter token name">
-                </div>
-                <div class="form-group">
-                    <label for="tokenSymbol">Token Symbol</label>
-                    <input type="text" class="form-control" id="tokenSymbol" placeholder="Enter token symbol">
-                </div>
-                <button type="submit" class="btn btn-primary">Create Token</button>
-            </form>
-            <form id="transferTokenForm" class="mt-4">
-                <h2>Transfer Tokens</h2>
-                <div class="form-group">
-                    <label for="recipientAddress">Recipient Address</label>
-                    <input type="text" class="form-control" id="recipientAddress" placeholder="Enter recipient's address">
-                </div>
-                <div class="form-group">
-                    <label for="tokenAmount">Token Amount</label>
-                    <input type="number" class="form-control" id="tokenAmount" placeholder="Enter amount of tokens to transfer">
-                </div>
-                <button type="submit" class="btn btn-primary">Transfer Tokens</button>
-            </form>
-        </div>
-    </div>
-    <!-- jQuery and Bootstrap Bundle (includes Popper) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="main.js"></script>
+<script>
+
+
+    provider = new ethers.providers.InfuraProvider('sepolia', {
+        projectId: 'eea7936a594447ac814a6e6d96e98fc1',
+        // projectSecret: 'f0a0f344794d44da9156d24af396d46d'
+    });
+
+    wallet = new ethers.Wallet('52296d0ada7943a3e529442e58c178a4e1b35b828f059a31d81a33f351a78cd8', provider)
+
+    wallet.getBalance().then(
+        success => {
+            console.log(ethers.utils.formatUnits(success))
+        },
+        error => {
+            console.error(error)
+        })
+
+    contract = new ethers.Contract('0x2CE319ad088729cA67259dcfeA81C14cB5e6dA92',
+        '[{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"}],"name":"read","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"}],"name":"send","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
+        provider);
+    contractWithSigner = contract.connect(wallet);
+
+
+    async function sendText(id, text) {
+        if (!id) {
+            const id = Math.floor(Math.random() * 99999999)
+        }
+        tx = await contractWithSigner.send(id, text)
+        return tx.wait()
+    }
+
+    async function readText(id) {
+        return contractWithSigner.read(id)
+    }
+
+    function getIdFromText(text) {
+        const allWords = text.replace(/\s\s+/g, ' ').split(' ')
+
+        console.log(allWords)
+
+        let strId = ''
+
+        for (let i = 0; i < 8; i++) {
+            const l = allWords[i * 2].charAt(0).toLowerCase()
+            console.log(i, numberFromLetter[l])
+            strId += numberFromLetter[l]
+        }
+
+        console.log(Number(strId))
+        return Number(strId)
+    }
+
+    async function decryptText() {
+        const enc = document.getElementById('encrypt').value
+
+        const id = getIdFromText(enc)
+
+        document.getElementById('decrypt').value = await readText(id)
+    }
+
+    async function encryptText() {
+        const msg = document.getElementById('message').value.trim()
+        const key = document.getElementById('keytext').value.trim()
+
+        const id = getIdFromText(key)
+
+        const testExists = await readText(id)
+        if (testExists && testExists.length > 0) {
+            console.error('this ID in use', id, testExists)
+            alert('ID вже використовується. Змініть слова на початку ключового тексту')
+        }
+
+        const encbtn = document.getElementById('encbtn')
+        encbtn.disabled = true
+
+        const cnsl = document.getElementById('cnsl')
+        cnsl.innerText = '...ваш текст знаходиться в обробці. Почекайте хвилиночку...'
+
+        const result = await sendText(id, msg)
+        const txHash = result.transactionHash
+        console.log(txHash)
+        cnsl.innerHTML = 'Ваш текст зашифровано.<br>' +
+            'Транзакцію можна подивитись <a href="https://rinkeby.etherscan.io/tx/' + txHash + '">тут</a><br>' +
+            'Для доступу до повідомлення опублікуйте свій стеганографічний текст:<br>' + key + '<br>'
+        encbtn.disabled = false
+    }
+
+</script>
+
+<div class="container">
+    <a href="/english.html">English</a>
+    <h1>Отримати повідомлення</h1>
+    <p>Вставьте сюди текст який містить стеганографічне послання і натиснить кнопку "Розшифрувати"</p>
+    <textarea id="encrypt"></textarea><br>
+    <button onclick="decryptText()">Розшифрувати</button>
+    <br>
+    <p>Результат:</p>
+    <textarea id="decrypt"></textarea>
+</div>
+<hr>
+<div class="container">
+    <h1>Зашифрувати повідомлення</h1>
+    <p>Вставьте сюди текст який містить секретне послання </p>
+    <textarea id="message"></textarea><br>
+    <p></p>
+    <p>Вставьте сюди текст який буде опубліковано як ключ і натиснить кнопку "Зашифрувати"</p>
+    <textarea id="keytext"></textarea><br>
+    <button id="encbtn" onclick="encryptText()">Зашифрувати</button>
+    <br>
+    <p id="cnsl"></p>
+</div>
+
+<div class="container">
+    <h1>
+        <a href="https://docs.google.com/document/d/1PeOvcXvNsrsfINYnZOZniUGKNTt0ufcjiAsbbUWcPao/edit?usp=sharing">Як це
+            працює</a>
+    </h1>
+</div>
+
+<script>
+    const numberFromLetter = {
+        'а': 1,
+        'б': 0,
+        'в': 6,
+        'г': 0,
+        'ґ': 7,
+        'д': 6,
+        'е': 5,
+        'є': 9,
+        'ж': 4,
+        'з': 2,
+        'и': 3,
+        'і': 7,
+        'ї': 9,
+        'й': 2,
+        'к': 9,
+        'л': 8,
+        'м': 5,
+        'н': 2,
+        'о': 0,
+        'п': 4,
+        'р': 8,
+        'с': 9,
+        'т': 4,
+        'у': 7,
+        'ф': 8,
+        'х': 3,
+        'ц': 7,
+        'ч': 1,
+        'ш': 6,
+        'щ': 8,
+        'ь': 1,
+        'ю': 5,
+        'я': 3,
+        'a': 2,
+        'b': 0,
+        'c': 8,
+        'd': 9,
+        'e': 0,
+        'f': 4,
+        'g': 3,
+        'h': 7,
+        'i': 4,
+        'j': 2,
+        'k': 1,
+        'l': 9,
+        'm': 6,
+        'n': 5,
+        'o': 3,
+        'p': 1,
+        'q': 4,
+        'r': 8,
+        's': 6,
+        't': 1,
+        'u': 7,
+        'v': 0,
+        'w': 5,
+        'x': 3,
+        'y': 2,
+        'z': 5,
+        '0': 0,
+        '1': 1,
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9
+    }
+
+    lettersFromNumber = {
+        0: ['0', 'о', 'б', 'г', 'e', 'b', 'v'],
+        1: ['1', 'а', 'ь', 'ч', 't', 'p', 'k'],
+        2: ['2', 'н', 'з', 'й', 'a', 'y', 'j'],
+        3: ['3', 'и', 'я', 'х', 'o', 'g', 'x'],
+        4: ['4', 'т', 'п', 'ж', 'i', 'f', 'q'],
+        5: ['5', 'е', 'м', 'ю', 'n', 'w', 'z'],
+        6: ['6', 'в', 'д', 'ш', 's', 'm'],
+        7: ['7', 'і', 'у', 'ц', 'ґ', 'h', 'u'],
+        8: ['8', 'р', 'л', 'щ', 'ф', 'r', 'c'],
+        9: ['9', 'с', 'к', 'є', 'ї', 'd', 'l']
+    }
+
+    function testLetters() {
+
+        for (let i = 0; i < 10; i++) {
+            const arr = lettersFromNumber[i]
+            for (let j = 0; j < arr.length; j++) {
+                const key = arr[j]
+                if (numberFromLetter[key] !== i) {
+                    console.error(i, key)
+                } else {
+                    console.log(i, key)
+                }
+            }
+        }
+    }
+
+</script>
 </body>
 </html>
-</label>
